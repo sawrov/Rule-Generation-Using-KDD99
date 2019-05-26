@@ -54,6 +54,7 @@ class processing:
             file.close()
 
             filepath = 'kddcup.data_10_percent'
+            # filepath = 'temp'
             with open(filepath) as fp:
                 line = fp.readline()
                 while line:
@@ -80,21 +81,21 @@ class processing:
                     if(test<1):
                         # data_array[41]="normal"
                         data_array[41]=0
-                    elif(test<7):
-                        # data_array[41]="dos"
-                        data_array[41]=1
-
-                    elif(test<11):
-                        # data_array="probe"
-                        data_array[41]=2
-
-                    elif(test<19):
-                        # data_array="r2l"
-                        data_array[41]=3
+                    # elif(test<7):
+                    #     # data_array[41]="dos"
+                    #     data_array[41]=1
+                    #
+                    # elif(test<11):
+                    #     # data_array="probe"
+                    #     data_array[41]=1
+                    #
+                    # elif(test<19):
+                    #     # data_array="r2l"
+                    #     data_array[41]=3
 
                     else:
                         # data_array="u2r"
-                        data_array[41]=4
+                        data_array[41]=1
 
                     data.append(data_array)
                     line = fp.readline()
@@ -102,9 +103,6 @@ class processing:
 
     # this function converts the integer representation to binary represenation of data
     def extract_info(self):
-
-        for data in self.phenotype.iterrows():
-            print data[1]
 
         selection=self.phenotype[['duration','src_bytes','dst_host_srv_serror_rate','result']]
 
@@ -116,16 +114,19 @@ class processing:
             r2l=[]
             u2r=[]
             for ind, values in enumerate(row[1]):
-                if(ind<=41):
+                if(ind<=4):
                     binary_rep = ("{0:b}".format(int(float(values))))
                     # print str(values)+"is represented by"+str(binary_rep)
-                    if ind == 1:
+                    if ind == 0:
+                        binary_rep = binary_rep.zfill(12)
+                    elif ind == 1:
                         binary_rep = binary_rep.zfill(12)
                     elif ind == 2:
-                        binary_rep = binary_rep.zfill(12)
+                        binary_rep = binary_rep.zfill(7)
                     binary_rep = list(binary_rep)
                     instance.extend(binary_rep)
-            print "".join(instance)
+            this= "".join(instance)
+            print (this)
                 # else:
                 #
                 #     if(values=="normal"):
