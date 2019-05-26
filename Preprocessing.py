@@ -24,17 +24,47 @@ class processing:
             col=file.read().split('\n')
             file.close()
             data=[]
+
             file=open('data_reduction/count.txt','r')
-            count_index=file.read().split('\n')
-            file.close
+            count_index=file.read().split(',')
+            file.close()
+
+            file = open('data_reduction/dst_bytes.txt', 'r')
+            dst_bytes = file.read().split(',')
+            file.close()
+
+            file = open('data_reduction/duration.txt', 'r')
+            duration = file.read().split(',')
+            file.close()
+
+            file = open('data_reduction/num_compromised.txt', 'r')
+            num_compromised = file.read().split(',')
+            file.close()
+
+            file = open('data_reduction/src_bytes.txt', 'r')
+            src_bytes = file.read().split(',')
+            file.close()
+
+            file = open('data_reduction/srv_count.txt', 'r')
+            srv_count = file.read().split(',')
+            file.close()
+
             filepath = 'temp'
             with open(filepath) as fp:
                 line = fp.readline()
                 while line:
                     data_array=line.split('\n')[0].split(',')
+                    data_array[0]=duration.index(data_array[0])
                     data_array[1]=protocol.index(data_array[1])
                     data_array[2]=service.index(data_array[2])
                     data_array[3]=flag.index(data_array[3])
+                    data_array[4]=src_bytes.index(data_array[4])
+                    data_array[5]=dst_bytes.index(data_array[5])
+                    data_array[12]=num_compromised.index(data_array[12])
+                    data_array[22]=count_index.index(data_array[22])
+                    data_array[23]=srv_count.index(data_array[23])
+
+
                     test=label.index(data_array[41])
 
                     # normal labelled as 0
@@ -67,6 +97,9 @@ class processing:
 
     # this function converts the integer representation to binary represenation of data
     def extract_info(self):
+
+        for data in self.phenotype.iterrows():
+            print data[1]
 
         selection=self.phenotype[['duration','src_bytes','dst_host_srv_serror_rate','result']]
 
