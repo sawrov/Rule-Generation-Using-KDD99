@@ -1,4 +1,5 @@
 from random import randint
+from random import uniform
 
 class DNA:
 	"""docstring for DNA"""
@@ -11,7 +12,9 @@ class DNA:
 
 
 	def mutate(self,mutationrate):
-		print mutationrate
+		for i in range(0,self.size):
+			if(uniform(0,1)<mutationrate):
+				self.genes[i]=randint(0,1)
 
 	def crossover(self, partner):
 		midpoint=randint(0,self.size)
@@ -21,8 +24,9 @@ class DNA:
 				child.genes[i]=self.genes[i]
 			else:
 				child.genes[i]=partner.genes[i]
-		return child		
-		
+		return child	
+
+
 
 
 

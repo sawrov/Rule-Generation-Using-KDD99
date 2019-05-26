@@ -34,17 +34,16 @@ class population:
 			for i in range(0,freq):
 				self.matingpool.append(individual)
 
-		print("Mating Pool Initialized of size: "+str(len(self.matingpool)))
-
 
 	def reproduce(self):
 		next_generation=population(self.popsize,self.maxstring,self.mutation_rate)
 		for i in range(0,self.popsize):
-			a=randint(0,len(self.matingpool))
-			b=randint(0,len(self.matingpool))
+			a=randint(0,len(self.matingpool)-1)
+			b=randint(0,len(self.matingpool)-1)
 			partnera=self.matingpool[a]
 			partnerb=self.matingpool[b]
 			child=partnera.crossover(partnerb)
+			child.mutate(self.mutation_rate)
 			next_generation.population[i]=child
 		return next_generation
 

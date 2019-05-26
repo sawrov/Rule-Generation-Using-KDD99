@@ -6,7 +6,7 @@ from Evolution import population
 
 # Read data from the dataset and convert to
 
-
+global ruleset
 phenotype= pd.DataFrame({'A' : []})
 def readData():
 	global phenotype
@@ -35,8 +35,10 @@ def readData():
 
 
 
+#My fitness function is wrong,its wrong and it's wrong
 #calculate the score of each rules based on the difference of bits.
-def calculate_fitness(this,that):
+
+def fitness(this,that):
 	similarity_index=0.00
 	if len(this) == len(that):
 		for i in range(len(this)):
@@ -44,12 +46,24 @@ def calculate_fitness(this,that):
 				similarity_index=similarity_index+1
 	return similarity_index/28
 
+def calculate_fitness(individual):
+	global smurf_train
+	max_fitness=0
+	avgfitness=0
+	for individual in population.population:
+		individual.fitness=0
+		for packet in smurf_train:
+			individual.fitness=individual.fitness+fitness(individual.genes,packet)
+		if(individual.fitness>max_fitness):
+			max_fitness=individual.fitness
+		avgfitness=avgfitness+individual.fitness
+	return max_fitness
 
 
 
 genotype=readData()
 smurf=genotype[["src_bytes","rerror_rate","same_srv_rate","srv_serror_rate","srv_rerror_rate","dst_host_srv_count","dst_host_same_srv_rate","dst_host_diff_srv_rate","dst_host_serror_rate","dst_host_srv_serror_rate"]]
-smurf_test_cases=[]
+smurf_train=[]
 instance=[]
 for row in smurf.iterrows():
 	instance=[]
@@ -62,28 +76,49 @@ for row in smurf.iterrows():
 		binary_rep=list(binary_rep)
 		instance.extend(binary_rep)
 	instance=map(int,instance)
-	smurf_test_cases.append(instance)
-#
+	smurf_train.append(instance)
+
+new_data=open("smurf_data","w")
+for line in smurf_train:
+	c=" ".join(map(str,line))
+	new_data.write(c+"\n")
+
+new_population =population(50,28)
+new_population.initialize_population()
+max=calculate_fitness(new_population)
+# for individual in new_population.population:
+# 	print individual.genes
+# 	print individual.fitness
+print("-----------------------------------------------------------------------------------")
+final_generation=new_population
 
 
-current_generation =population(100,28)
-current_generation.initialize_population()
+def evolution(population, generation):
+	print("generation"+str(generation))
+	new_genration=population
+	max_fitness=calculate_fitness(population)
+	if generation<100:
+		global final_generation
+		final_generation=population
+		# print final_generation.population[2].fitness
+		# print final_generation.population[2].genes
+		population.initialize_matingpool(max_fitness)
+		new_genration=population.reproduce()
+		# print("---GENERATION--"+str(generation))
+		# print("--MAX_FITNESS"+str(max_fitness))
+	else:
+		return
 
-max_fitness=0
-for individual in current_generation.population:
-		for packet in smurf_test_cases:
-			individual.fitness=individual.fitness+calculate_fitness(individual.genes,packet)
-		if(individual.fitness>max_fitness):
-			max_fitness=individual.fitness
+	evolution(new_genration,generation+1)
 
 
-# for individual in current_generation.population:
-	# print individual.fitness
+		
+
+# evolution(new_population,0)
+# for individual in final_generation.population:
+# 	print individual.fitness
+# 	print individual.genes
 
 
-current_generation.initialize_matingpool(max_fitness)
-next_generation=current_generation.reproduce()
-for individual in next_generation.population:
-	print individual.genes
 
 #safal testlai maile bhaneko thiyee ta ho nee ra
