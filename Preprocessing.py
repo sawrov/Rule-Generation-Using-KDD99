@@ -15,11 +15,15 @@ class processing:
 
     # this function reads the data and converts everything to integer equivalent
     def readData(self):
+
         if self.phenotype.empty:
             protocol=['icmp','tcp','udp']
-            service=['http','smtp','finger','domain_u','auth','telnet','ftp','eco_i','ntp_u','ecr_i','other','private','pop_3','ftp_data','rje','time','mtp','link','remote_job','gopher','ssh','name','whois','domain','login','imap4','daytime','ctf','nntp','shell','IRC','nnsp','http_443','exec','printer','efs','courier','uucp','klogin','kshell','echo','discard','systat','supdup','iso_tsap','hostnames','csnet_ns','pop_2','sunrpc','uucp_path','netbios_ns','netbios_ssn','netbios_dgm','sql_net','vmnet','bgp','Z39_50','ldap','netstat','urh_i','X11','urp_i','pm_dump','tftp_u','tim_i','red_i']
+            # service=['http','smtp','finger','domain_u','auth','telnet','ftp','eco_i','ntp_u','ecr_i','other','private','pop_3','ftp_data','rje','time','mtp','link','remote_job','gopher','ssh','name','whois','domain','login','imap4','daytime','ctf','nntp','shell','IRC','nnsp','http_443','exec','printer','efs','courier','uucp','klogin','kshell','echo','discard','systat','supdup','iso_tsap','hostnames','csnet_ns','pop_2','sunrpc','uucp_path','netbios_ns','netbios_ssn','netbios_dgm','sql_net','vmnet','bgp','Z39_50','ldap','netstat','urh_i','X11','urp_i','pm_dump','tftp_u','tim_i','red_i']
+            service=[]
             flag=['flag','SF','S1','REJ','S2','S0','S3','RSTO','RSTR','RSTOS0','OTH','SH']
-            label=['normal.','smurf.','neptune.','back.','teardrop.','pod.','land.','satan.','ipsweep.','portsweep.','nmap.','warezclient.','guess_passwd.','warezmaster.','imap.','ftp_write.','multihop.','phf.','spy.','buffer_overflow.','rootkit.','loadmodule.','perl.']
+            # label=['normal','smurf.','neptune.','back.','teardrop.','pod.','land.','satan.','ipsweep.','portsweep.','nmap.','warezclient.','guess_passwd','warezmaster.','imap.','ftp_write.','multihop.','phf.','spy.','buffer_overflow.','rootkit.','loadmodule.','perl.','snmpguess','processtable']
+            # label=['normal','smurf','neptune','back','teardrop','pod','land','satan','ipsweep','portsweep','nmap','warezclient','guess_passwd','warezmaster','imap','ftp_write','multihop','phf','spy','buffer_overflow','rootkit','loadmodule','perl','snmpguess','processtable','saint','mscan','apache2','httptunnel']
+            label=[]
             file =open('features.txt','r')
             col=file.read().split('\n')
             file.close()
@@ -49,57 +53,116 @@ class processing:
             srv_count = file.read().split(',')
             file.close()
 
-            file = open('data_reduction/dst_host_srv_serror_rate.txt', 'r')
-            dst_host_srv_serror_rate = file.read().split(',')
-            file.close()
+            # file = open('data_reduction/dst_host_srv_serror_rate.txt', 'r')
+            # dst_host_srv_serror_rate = file.read().split(',')
+            # file.close()
+            dst_host_srv_serror_rate=[]
 
-            filepath = 'kddcup.data_10_percent'
+
+            filepath = 'KDDTrain+.txt'
+            # filepath = 'KDDTest-21.txt'
             # filepath = 'temp'
+            notthere_duration=[]
+            notthere_src_bytes=[]
+            notthere_dst=[]
+            notthere_num_comp=[]
+            notthere_count_index=[]
+            notthere_srv_count=[]
+            notthere_dst_srv_error_rate=[]
+            notthere_service=[]
+
+            attack=[]
             with open(filepath) as fp:
                 line = fp.readline()
                 while line:
                     data_array=line.split('\n')[0].split(',')
-                    data_array[0]=duration.index(data_array[0])
-                    data_array[1]=protocol.index(data_array[1])
-                    data_array[2]=service.index(data_array[2])
-                    data_array[3]=flag.index(data_array[3])
-                    data_array[4]=src_bytes.index(data_array[4])
-                    data_array[5]=dst_bytes.index(data_array[5])
-                    data_array[12]=num_compromised.index(data_array[12])
-                    data_array[22]=count_index.index(data_array[22])
-                    data_array[23]=srv_count.index(data_array[23])
-                    data_array[38]=dst_host_srv_serror_rate.index(data_array[38])
-
-
-                    test=label.index(data_array[41])
-
-                    # normal labelled as 0
-                    # dos labelled as 1
-                    # probe labelled as 2
-                    # r2l labelled as 3
-                    #u2r as 4
-                    if(test<1):
-                        # data_array[41]="normal"
-                        data_array[41]=0
-                    # elif(test<7):
-                    #     # data_array[41]="dos"
-                    #     data_array[41]=1
-                    #
-                    # elif(test<11):
-                    #     # data_array="probe"
-                    #     data_array[41]=1
-                    #
-                    # elif(test<19):
-                    #     # data_array="r2l"
-                    #     data_array[41]=3
-
+                    if(data_array[0] in duration):
+                        data_array[0]=duration.index(data_array[0])
                     else:
-                        # data_array="u2r"
-                        data_array[41]=1
+                        notthere_duration.append(data_array[0])
+
+                    data_array[1]=protocol.index(data_array[1])
+
+                    if (data_array[2] in service):
+                        data_array[2] = service.index(data_array[2])
+                    else:
+                        notthere_service.append(data_array[0])
+
+
+                    data_array[3]=flag.index(data_array[3])
+
+                    if(data_array[4] in src_bytes):
+                        data_array[4]=src_bytes.index(data_array[4])
+                    else:
+                        notthere_src_bytes.append(data_array[4])
+                    if(data_array[5] in dst_bytes):
+                        data_array[5]=dst_bytes.index(data_array[5])
+                    else:
+                        notthere_dst.extend(data_array[5])
+
+                    if data_array[12] in num_compromised:
+                        data_array[12]=num_compromised.index(data_array[12])
+                    else:
+                        notthere_num_comp.append(data_array[12])
+
+                    if data_array[22] in count_index:
+                        data_array[22]=count_index.index(data_array[22])
+                    else:
+                        notthere_count_index.append(data_array[22])
+
+                    if data_array[23] in srv_count:
+                        data_array[23]=srv_count.index(data_array[23])
+                    else:
+                        notthere_srv_count.append(data_array[23])
+
+                    if (data_array[38] in dst_host_srv_serror_rate):
+                        data_array[38]=dst_host_srv_serror_rate.index(data_array[38])
+                    else:
+                        if data_array[41] not in notthere_dst_srv_error_rate:
+                            notthere_dst_srv_error_rate.append(data_array[38])
+
+
+                    if(data_array[41] in label):
+                        data_array[41]=label.index(data_array[41])
+                    else:
+                        if data_array[41] not in attack:
+                            attack.append(data_array[41])
+
+                            # normal labelled as 0
+                            # dos labelled as 1
+                            # probe labelled as 2
+                            # r2l labelled as 3
+                            # u2r as 4
+                            # if(test<1):
+                            #     # data_array[41]="normal"
+                            #     data_array[41]=0
+                            # # elif(test<7):
+                            # #     # data_array[41]="dos"
+                            # #     data_array[41]=1
+                            # #
+                            # # elif(test<11):
+                            # #     # data_array="probe"
+                            # #     data_array[41]=1
+                            # #
+                            # # elif(test<19):
+                            # #     # data_array="r2l"
+                            # #     data_array[41]=3
+                            #
+                            # else:
+                            #     # data_array="u2r"
+                            #     data_array[41]=1
+
 
                     data.append(data_array)
                     line = fp.readline()
             self.phenotype= pd.DataFrame(data, columns=col)
+        print len(notthere_dst_srv_error_rate)
+        # file=open("index_files/attack.txt",'w')
+        # print(len(attack))
+        # file.write("\n".join(attack))
+        # file.close()
+
+
 
     # this function converts the integer representation to binary represenation of data
     def extract_info(self):
@@ -126,7 +189,7 @@ class processing:
                     binary_rep = list(binary_rep)
                     instance.extend(binary_rep)
             this= "".join(instance)
-            print (this)
+            # print (this)
                 # else:
                 #
                 #     if(values=="normal"):
@@ -142,7 +205,7 @@ class processing:
 
 
 processing1= processing()
-processing1.extract_info()
+# processing1.extract_info()
 
 
 

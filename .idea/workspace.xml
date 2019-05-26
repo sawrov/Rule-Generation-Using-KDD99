@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="44727228-727c-464e-987a-41a0ae47dfc4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing.py" afterPath="$PROJECT_DIR$/Preprocessing.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/features.txt" afterPath="$PROJECT_DIR$/features.txt" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,8 +17,8 @@
       <file leaf-file-name="GA.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GA.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-34">
-              <caret line="11" column="20" lean-forward="false" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
+            <state relative-caret-position="-431">
+              <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
               <folding>
                 <element signature="e#8#32#0" expanded="true" />
               </folding>
@@ -28,9 +29,11 @@
       <file leaf-file-name="Preprocessing.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Preprocessing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="56" column="31" lean-forward="true" selection-start-line="56" selection-start-column="31" selection-end-line="56" selection-end-column="31" />
-              <folding />
+            <state relative-caret-position="223">
+              <caret line="58" column="39" lean-forward="true" selection-start-line="58" selection-start-column="39" selection-end-line="58" selection-end-column="39" />
+              <folding>
+                <element signature="e#5801#5823#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -70,8 +73,8 @@
       <file leaf-file-name="features.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/features.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="368">
+              <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -87,6 +90,7 @@
       <list>
         <option value="$PROJECT_DIR$/temp" />
         <option value="$PROJECT_DIR$/GA.py" />
+        <option value="$PROJECT_DIR$/features.txt" />
         <option value="$PROJECT_DIR$/Preprocessing.py" />
       </list>
     </option>
@@ -228,14 +232,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/features.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/kddcup.data_10_percent">
       <provider selected="true" editor-type-id="LargeFileEditor">
         <state relative-caret-position="121821">
@@ -243,10 +239,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/features.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/GA.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-34">
-          <caret line="11" column="20" lean-forward="false" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
+        <state relative-caret-position="-431">
+          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
           <folding>
             <element signature="e#8#32#0" expanded="true" />
           </folding>
@@ -255,9 +259,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Preprocessing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="56" column="31" lean-forward="true" selection-start-line="56" selection-start-column="31" selection-end-line="56" selection-end-column="31" />
-          <folding />
+        <state relative-caret-position="223">
+          <caret line="58" column="39" lean-forward="true" selection-start-line="58" selection-start-column="39" selection-end-line="58" selection-end-column="39" />
+          <folding>
+            <element signature="e#5801#5823#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
