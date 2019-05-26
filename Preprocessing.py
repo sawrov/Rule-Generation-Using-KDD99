@@ -19,7 +19,7 @@ class processing:
             protocol=['icmp','tcp','udp']
             service=['http','smtp','finger','domain_u','auth','telnet','ftp','eco_i','ntp_u','ecr_i','other','private','pop_3','ftp_data','rje','time','mtp','link','remote_job','gopher','ssh','name','whois','domain','login','imap4','daytime','ctf','nntp','shell','IRC','nnsp','http_443','exec','printer','efs','courier','uucp','klogin','kshell','echo','discard','systat','supdup','iso_tsap','hostnames','csnet_ns','pop_2','sunrpc','uucp_path','netbios_ns','netbios_ssn','netbios_dgm','sql_net','vmnet','bgp','Z39_50','ldap','netstat','urh_i','X11','urp_i','pm_dump','tftp_u','tim_i','red_i']
             flag=['flag','SF','S1','REJ','S2','S0','S3','RSTO','RSTR','RSTOS0','OTH','SH']
-            label=['normal.','smurf.','neptuno.','back.','teardrop.','pod.','land.','satan.','ipsweep.','portsweep.','nmap.','warezclient.','guess_passwd.','warezmaster.','imap.','ftp_write.','multihop.','phf.','spy.','buffer_overflow.','rootkit.','loadmodule.','perl.']
+            label=['normal.','smurf.','neptune.','back.','teardrop.','pod.','land.','satan.','ipsweep.','portsweep.','nmap.','warezclient.','guess_passwd.','warezmaster.','imap.','ftp_write.','multihop.','phf.','spy.','buffer_overflow.','rootkit.','loadmodule.','perl.']
             file =open('features.txt','r')
             col=file.read().split('\n')
             file.close()
@@ -49,7 +49,11 @@ class processing:
             srv_count = file.read().split(',')
             file.close()
 
-            filepath = 'temp'
+            file = open('data_reduction/dst_host_srv_serror_rate.txt', 'r')
+            dst_host_srv_serror_rate = file.read().split(',')
+            file.close()
+
+            filepath = 'kddcup.data_10_percent'
             with open(filepath) as fp:
                 line = fp.readline()
                 while line:
@@ -63,6 +67,7 @@ class processing:
                     data_array[12]=num_compromised.index(data_array[12])
                     data_array[22]=count_index.index(data_array[22])
                     data_array[23]=srv_count.index(data_array[23])
+                    data_array[38]=dst_host_srv_serror_rate.index(data_array[38])
 
 
                     test=label.index(data_array[41])
@@ -115,9 +120,9 @@ class processing:
                     binary_rep = ("{0:b}".format(int(float(values))))
                     # print str(values)+"is represented by"+str(binary_rep)
                     if ind == 1:
-                        binary_rep = binary_rep.zfill(30)
-                    elif ind == 4:
-                        binary_rep = binary_rep.zfill(3)
+                        binary_rep = binary_rep.zfill(12)
+                    elif ind == 2:
+                        binary_rep = binary_rep.zfill(12)
                     binary_rep = list(binary_rep)
                     instance.extend(binary_rep)
             print "".join(instance)
