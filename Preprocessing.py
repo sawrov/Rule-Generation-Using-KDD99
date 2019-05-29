@@ -7,15 +7,17 @@ class processing:
     phenotype= pd.DataFrame({'A' : []})
     type=None
     data=None
+    genotype=[]
+    intrusion=0
+    normal=0
+
     def __init__(self,type=None,source="/"):
         self.type=type
         self.data=source
         self.readData()
 
-
     # this function reads the data and converts everything to integer equivalent
     def readData(self):
-
         if self.phenotype.empty:
             protocol=['icmp','tcp','udp']
             flag=['flag','SF','S1','REJ','S2','S0','S3','RSTO','RSTR','RSTOS0','OTH','SH']
@@ -145,7 +147,11 @@ class processing:
 
 
                     if(data_array[41]!=0):
+                        self.intrusion+=1
                         data_array[41]=1
+                    else:
+                        self.normal+=1
+
 
 
                             # Code snippet below to classify attacks
@@ -177,23 +183,18 @@ class processing:
                     data.append(data_array)
                     line = fp.readline()
             self.phenotype= pd.DataFrame(data, columns=col)
-
-
-        print("Values below should always be 0, if not something needs to be done")
+        print("Values below should always be 0, if not index needs to be updated")
         print("-------------------------------------")
-        # print len(notthere_duration)
-        # print len(notthere_src_bytes)
-        # print len(notthere_dst)
-        # print len(notthere_num_comp)
-        # print len(notthere_srv_count)
-        # print len(notthere_dst_srv_error_rate)
-        # print len(notthere_count_index)
-        # print len(notthere_service)
-        # print len(notthere_attack)
+        print(len(notthere_duration))
+        print(len(notthere_src_bytes))
+        print(len(notthere_dst))
+        print(len(notthere_num_comp))
+        print(len(notthere_srv_count))
+        print(len(notthere_dst_srv_error_rate))
+        print(len(notthere_count_index))
+        print(len(notthere_service))
+        print(len(notthere_attack))
         print("-------------------------------------")
-
-
-
 
         #  Use this code snippet to append any new data to indexes
         # file=open("index_files/dst_bytes.txt",'a')
@@ -207,6 +208,7 @@ class processing:
     def extract_info(self):
 
         selection=self.phenotype[['duration','src_bytes','dst_host_srv_serror_rate','result']]
+        print("Extracting Information")
 
         for row in selection.iterrows():
             instance=[]
@@ -227,8 +229,9 @@ class processing:
                         binary_rep = binary_rep.zfill(7)
                     binary_rep = list(binary_rep)
                     instance.extend(binary_rep)
-            this= "".join(instance)
-            print (this)
+            self.genotype.append(map(int,instance))
+    print("Extracting Information Completed")
+
                 # else:
                 #
                 #     if(values=="normal"):
@@ -241,12 +244,6 @@ class processing:
                 #         r2l = map(map(int, instance))
                 #     else:
                 #         u2r = map(map(int, instance))
-
-
-processing1= processing()
-processing1.extract_info()
-
-
 
 
 
