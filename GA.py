@@ -1,49 +1,36 @@
 from Evolution import population
 from Preprocessing import processing
+import numpy as num
 
 
 
 def fitness(individual):
 	global load_train_data
 	global key_index
-	TP=0
-	TN=0
-	FP=0
-	FN=0
+	TP=0.00
+	TN=0.00
+	FP=0.00
+	FN=0.00
 	for specimen in load_train_data.genotype:
-		prediction=predict(individual.genes,specimen)
+		suspicion=predict(individual.genes,specimen)
+		prediction=1
 		label=specimen[key_index]
 		if(prediction == label):
-			if(label==1):
-				TP+=1
-			else:
-				TN+=1
+				TP+=suspicion
 		else:
-			if(label==1):
-				FN+=1
-			else:
-				FP+=1
-	if(TP>0 | FP>0):
-		print(TP)
-		print(TN)
-		print(FP)
-		print(FN)
-
-
-
-
-
-
-
-
+				FP+=suspicion
+	fitness=TP/load_train_data.intrusion-FP/load_train_data.normal
+	individual.fitness=fitness
 
 def predict(individual,specimen):
 	flag=1
+	suspicion=0
 	for i in range(0,len(individual)):
-		if(str(individual[i])!= str(specimen[i])):
-			flag=0
-			break
-	return flag
+		if(str(individual[i])== str(specimen[i])):
+			suspicion+=1
+
+	suspicion=float(suspicion)/len(individual)
+	return suspicion
 
 #
 # def calculate_fitness(individual):
@@ -80,20 +67,26 @@ def evolution(population, generation):
 
 load_train_data=processing()
 load_train_data.extract_info()
-print(load_train_data.normal)
-print(load_train_data.intrusion)
-print(len(load_train_data.genotype[1]))
 
 key_index=len(load_train_data.genotype[1])-1
-new_population =population(1000,key_index)
+new_population =population(20,key_index)
 new_population.initialize_population()
 
 map(fitness,new_population.population)
 # evolution(new_population,0)
-# for individual in final_generation.population:
+# for individual in new_population.population:
 # 	print individual.fitness
 # 	print individual.genes
 
+era=20
+for generation in range(0,era):
+	print("-----------------------------------")
+	print("Generation: "+str(generation))
+	current_population=new_population
+	current_population.initialize_matingpool(new_population.min_fitness,new_population.max_fitness)
+	new_population=current_population.reproduce()
+	map(fitness,new_population.population)
+	new_population.calc_avg_fitness()
 
 
 #safal testlai maile bhaneko thiyee ta ho nee ra

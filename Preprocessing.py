@@ -8,6 +8,7 @@ class processing:
     type=None
     data=None
     genotype=[]
+    rank=[]
     intrusion=0
     normal=0
 
@@ -77,6 +78,7 @@ class processing:
             notthere_dst_srv_error_rate=[]
             notthere_service=[]
             notthere_attack=[]
+            ranks=[]
 
             with open(filepath) as fp:
                 line = fp.readline()
@@ -152,6 +154,10 @@ class processing:
                     else:
                         self.normal+=1
 
+                    self.rank.append(data_array[42])
+                    # if(data_array[42] not in ranks):
+                    #     ranks.append(data_array[42])
+
 
 
                             # Code snippet below to classify attacks
@@ -197,9 +203,8 @@ class processing:
         print("-------------------------------------")
 
         #  Use this code snippet to append any new data to indexes
-        # file=open("index_files/dst_bytes.txt",'a')
-        # file.write("\n")
-        # file.write("\n".join(notthere_dst))
+        # file=open("index_files/ranks.txt",'w')
+        # file.write("\n".join(ranks))
         # file.close()
 
 

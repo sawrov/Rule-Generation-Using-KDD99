@@ -5,7 +5,7 @@ class DNA:
 	"""docstring for DNA"""
 	def __init__(self, maxsize):
 		self.genes=[]
-		self.fitness=0
+		self.fitness=0.00
 		self.size=maxsize
 		for i in range(0,self.size):
 			self.genes.append(randint(0,1))
