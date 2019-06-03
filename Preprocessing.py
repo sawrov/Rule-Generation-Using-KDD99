@@ -2,19 +2,19 @@
 import pandas as pd
 
 # Read data from the dataset and convert to
-class processing:
+class process:
 
     phenotype= pd.DataFrame({'A' : []})
     type=None
-    data=None
+    data_source=None
     genotype=[]
     rank=[]
     intrusion=0
     normal=0
 
-    def __init__(self,type=None,source="/"):
+    def __init__(self,type=None,source="KDDTrain+_20Percent.txt"):
         self.type=type
-        self.data=source
+        self.data_source=source
         self.readData()
 
     # this function reads the data and converts everything to integer equivalent
@@ -66,7 +66,7 @@ class processing:
 
             # filepath = 'KDDTrain+.txt'
             # filepath = 'KDDTest+.txt'
-            filepath = 'KDDTrain+_20Percent.txt'
+            filepath = self.data_source
             # filepath = 'temp'
 
             notthere_duration=[]

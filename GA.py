@@ -2,35 +2,9 @@ from Evolution import population
 from Preprocessing import processing
 import numpy as num
 
+best_population=[]
+best_average_fitness=0
 
-
-def fitness(individual):
-	global load_train_data
-	global key_index
-	TP=0.00
-	TN=0.00
-	FP=0.00
-	FN=0.00
-	for specimen in load_train_data.genotype:
-		suspicion=predict(individual.genes,specimen)
-		prediction=1
-		label=specimen[key_index]
-		if(prediction == label):
-				TP+=suspicion
-		else:
-				FP+=suspicion
-	fitness=TP/load_train_data.intrusion-FP/load_train_data.normal
-	individual.fitness=fitness
-
-def predict(individual,specimen):
-	flag=1
-	suspicion=0
-	for i in range(0,len(individual)):
-		if(str(individual[i])== str(specimen[i])):
-			suspicion+=1
-
-	suspicion=float(suspicion)/len(individual)
-	return suspicion
 
 #
 # def calculate_fitness(individual):
@@ -72,13 +46,12 @@ key_index=len(load_train_data.genotype[1])-1
 new_population =population(20,key_index)
 new_population.initialize_population()
 
-map(fitness,new_population.population)
 # evolution(new_population,0)
 # for individual in new_population.population:
 # 	print individual.fitness
 # 	print individual.genes
 
-era=20
+era=100
 for generation in range(0,era):
 	print("-----------------------------------")
 	print("Generation: "+str(generation))
@@ -86,7 +59,30 @@ for generation in range(0,era):
 	current_population.initialize_matingpool(new_population.min_fitness,new_population.max_fitness)
 	new_population=current_population.reproduce()
 	map(fitness,new_population.population)
-	new_population.calc_avg_fitness()
+	avg=new_population.calc_avg_fitness()
+	print("Average_Fitness:"+str(avg))
+	if avg>best_average_fitness:
+		best_population=new_population
+		best_average_fitness=avg
+	print("Best Fitness:"+str(best_average_fitness))
+print("----------------------")
+print(best_population.average_fitness)
+file=open("Results/Best_Results.txt","a")
+file2=open("Results/Constraints.txt","a")
+ruleset=[]
+for individual in best_population.population:
+	rule=(" ".join(map(str,individual.genes)))
+	ruleset.append(rule)
+
+file.write("\n".join(ruleset))
+file.write("\nEndOfPopulation")
+file2.write("\n Average Fitness: "+str(best_population.average_fitness))
+file2.write("\n Total Number of Generation Run: "+str(era))
+file2.write("\n Total Number of Generation Run: "+str(era))
+file2.write("\n Max Fitness: "+str(best_population.max_fitness))
+file2.write("\n Min Fitness: "+str(best_population.min_fitness))
+file.close()
+file2.close()
 
 
 #safal testlai maile bhaneko thiyee ta ho nee ra

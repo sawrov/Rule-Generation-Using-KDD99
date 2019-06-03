@@ -18,13 +18,16 @@ class DNA:
 
 	def crossover(self, partner):
 		midpoint=randint(0,self.size)
-		child=DNA(self.size)
+		child1=DNA(self.size)
+		child2=DNA(self.size)
 		for i in range(0,self.size):
 			if i<midpoint:
-				child.genes[i]=self.genes[i]
+				child1.genes[i]=self.genes[i]
+				child2.genes[i]=partner.genes[i]
 			else:
-				child.genes[i]=partner.genes[i]
-		return child	
+				child1.genes[i]=partner.genes[i]
+				child2.genes[i]=self.genes[i]
+		return child1,child2
 
 
 
