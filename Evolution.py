@@ -10,39 +10,48 @@ import math
 class population:
 
 	population=list()
-	average_fitness=0.00
+	intermediate_pop=list()
+	performance=0.00
 	matingpool=[]
-	mutation_rate=0
+	mutation_rate=0.01
 	min_fitness=0
 	max_fitness=0
-	train_data=null
+	train_data=None
+	source=""
+	average_fitness=0
+	popsize=0   
+	w1=0.2
+	w2=0.8 
+	total=0                                                                                                  
 
 	def __init__(self, popsize=5,maxstring=5,mutation_rate=0.01,source="KDDTrain+_20Percent.txt"):
 		self.popsize = popsize
-		self.maxstring = maxstring
 		self.mutation_rate=mutation_rate
-		self.test_data=process(source)
-		self.test_data.extract_info()
+		self.source=source
+
+
 
 	
 
-	def initialize_population(self):
+	def initialize(self):
+		if not self.train_data:
+			self.train_data=process(self.source)
+			self.train_data.extract_info()
+			self.maxstring = len(self.train_data.genotype[0])
+			self.total=self.train_data.intrusion+self.train_data.normal
 		for i in range(0,self.popsize):
 			self.population.append(DNA(self.maxstring))
-	
 
 
-
-	def initialize_matingpool(self,min,max):
+	def initialize_matingpool(self):
 		self.matingpool=[]
 		for individual in self.population:
-			freq=int(math.ceil(interp(individual.fitness,[min,max],[1,100])))
+			freq=int(math.ceil(interp(individual.fitness,[self.min_fitness,self.max_fitness],[1,100])))
 			for i in range(0,freq):
 				self.matingpool.append(individual)
 
 
 	def reproduce(self):
-		next_generation=population(self.popsize,self.maxstring,self.mutation_rate)
 		for i in range(0,self.popsize):
 			a=randint(0,len(self.matingpool)-1)
 			b=randint(0,len(self.matingpool)-1)
@@ -51,53 +60,69 @@ class population:
 			child1,child2=partnera.crossover(partnerb)
 			child1.mutate(self.mutation_rate)
 			child2.mutate(self.mutation_rate)
-			next_generation.population[i]=child1
-		return next_generation
+			self.intermediate_pop.append(child1)
+		return self.intermediate_pop
 
-	def calc_avg_fitness(self):
 
-		for individual in self.population:
-			if individual.fitness<self.min_fitness:
-				self.min_fitness=individual.fitness
-			if individual.fitness>self.max_fitness:
-				self.max_fitness=individual.fitness
-			self.average_fitness+=individual.fitness
-
-		self.average_fitness=self.average_fitness/self.popsize
-		return (self.average_fitness)
-
-	def calculate_population_fitness(self):
+	def calculate_fitness(self):
 		map(self.fitness,self.population)
+		avg=0
+		min=1
+		max=0
+		for individual in self.population:
+			if(individual.fitness<min):
+				min=individual.fitness
+			if(individual.fitness>max):
+				max=individual.fitness
+			avg=avg+individual.fitness
+		self.min_fitness=min
+		self.max_fitness=max
+		self.average_fitness=avg/self.popsize
+
 
 	def fitness(self,individual):
-		global load_train_data
-		global key_index
-		TP = 0.00
-		TN = 0.00
-		FP = 0.00
-		FN = 0.00
-		for specimen in load_train_data.genotype:
-			suspicion = self.predict(individual.genes, specimen)
-			prediction = 1
-			label = specimen[key_index]
-			if (prediction == label):
-				TP += suspicion
-			else:
-				FP += suspicion
-		fitness = TP / load_train_data.intrusion - FP / load_train_data.normal
+		AB=0
+		A=0
+
+		for specimen in self.train_data.genotype:
+			prediction = self.predict(individual.genes, specimen)
+			if (prediction == "AB"):
+				AB += 1
+			elif(prediction == "A"):
+				A += 1  
+		support=AB/self.total
+		if(A==0):
+			A=1
+		confidence = AB/A
+		fitness = self.w1*support+self.w2*confidence
 		individual.fitness = fitness
 
-	def predict(self,individual, specimen):
-		flag = 1
-		suspicion = 0
-		for i in range(0, len(individual)):
-			if (str(individual[i]) == str(specimen[i])):
-				suspicion += 1
 
-		suspicion = float(suspicion) / len(individual)
-		if suspicion == 1:
-			print("Bingo")
-		return suspicion
+	def predict(self,individual, specimen):
+		
+		condition=1
+		result=1
+		limit=len(individual)-1
+		for i in range(0, limit-1):
+			if (str(individual[i]) != str(specimen[i])):
+				condition =0
+				break;
+		this=len(individual)
+		if(individual[limit]!=specimen[limit]):
+			result=0
+
+		if condition==1 and result == 1:
+			return "AB"
+		elif condition==1 and result==0:
+			return "A"
+		else:
+			return
+	def clean_generation(self):
+		self.intermediate_pop=list()
+		self.min_fitness=0
+		self.max_fitness=0
+		self.average_fitness=0
+	
 
 #first arg: number of initial population
 #second arg: number of bits in a single rule.
