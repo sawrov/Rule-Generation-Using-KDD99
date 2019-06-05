@@ -20,8 +20,6 @@ class population:
 	source=""
 	average_fitness=0
 	popsize=0   
-	w1=0.2
-	w2=0.8 
 	total=0                                                                                                  
 
 	def __init__(self, popsize=5,maxstring=5,mutation_rate=0.01,source="KDDTrain+_20Percent.txt"):
@@ -52,7 +50,6 @@ class population:
 
 
 	def reproduce(self):
-		print len(self.intermediate_pop)
 		while len(self.intermediate_pop)<self.popsize:
 			partnera=self.tournament()
 			partnerb=self.tournament()

@@ -10,8 +10,9 @@ new_population.calculate_fitness()
 best_population=new_population
 
 def show_info(test):
-	print test.genes
-	print test.fitness
+	print "Average fitness of the population:"+str(test.average_fitness)
+	print "Max fitness:"+str(test.max_fitness)
+	print "Min fitness:"+str(test.min_fitness)
 	
 era=1000
 for generation in range(0,era):
@@ -20,12 +21,13 @@ for generation in range(0,era):
 	current_population=new_population
 	current_population.initialize_matingpool()
 	new_population.population=current_population.reproduce()
-	print(len(new_population.population))
 	new_population.clean_generation()
 	new_population.calculate_fitness()
 	if best_population.average_fitness<new_population.average_fitness:
 		best_population=new_population
-	map(show_info,new_population.population)
+		print("Best POpulation Fitness: "+str(best_population.average_fitness))
+	show_info(new_population)
+	print("------------------------------------")
 
 
 	print("Average_Fitness:"+str(new_population.average_fitness))
