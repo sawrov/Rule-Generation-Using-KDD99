@@ -4,6 +4,8 @@ load_test_data=process(source="KDDTest+.txt")
 load_test_data.extract_info()
 
 file="Results/Best_Results.txt"
+with open("Results/recent.txt") as f:
+    file=str(f.readline())
 test_data=[]
 print(len(load_test_data.genotype[1]))
 print(load_test_data.genotype[1])
@@ -11,13 +13,12 @@ with open(file) as fp:
     line=fp.readline()
     while line:
             data=line.split('\n')[0].split(' ')
-            if (line != 'EndOfPopulation'):
-                test_data.append(map(int,data))
+            test_data.append(map(int,data))
             line=fp.readline()
 
 
-print(len(test_data))
-print(load_test_data.genotype[1][len(test_data[0])])
+this=(len(test_data[0])-1)
+print(load_test_data.genotype[1][this])
 
 def isanattack(individual):
     global test_data
