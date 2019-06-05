@@ -14,7 +14,7 @@ def show_info(test):
 	print "Max fitness:"+str(test.max_fitness)
 	print "Min fitness:"+str(test.min_fitness)
 	
-era=1
+era=500
 for generation in range(0,era):
 	print("-----------------------------------")
 	print("Generation: "+str(generation))
