@@ -88,7 +88,7 @@ class population:
 		map(self.fitness,self.population)
 		avg=0
 		min=1
-		max=0
+		max=-1
 		for individual in self.population:
 			if(individual.fitness<min):
 				min=individual.fitness
@@ -112,7 +112,7 @@ class population:
 					a=a+1
 				else:
 					b=b+1
-		fitness=a/self.train_data.intrusion - b/self.train_data.normal
+		fitness=float(a)/self.train_data.intrusion- float(b)/self.train_data.normal
 		individual.fitness = fitness
 
 
