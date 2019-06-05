@@ -1,0 +1,5 @@
+
+ Average Fitness: 0.0
+ Total Number of Generation Run: 1
+ Max Fitness: 0.0
+ Min Fitness: 0.0

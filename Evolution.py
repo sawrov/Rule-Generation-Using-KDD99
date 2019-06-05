@@ -20,7 +20,8 @@ class population:
 	source=""
 	average_fitness=0
 	popsize=0   
-	total=0                                                                                                  
+	total=0
+	suspicion=0.9                                                                               
 
 	def __init__(self, popsize=5,maxstring=5,mutation_rate=0.01,source="KDDTrain+_20Percent.txt"):
 		self.popsize = popsize
@@ -35,10 +36,16 @@ class population:
 		if not self.train_data:
 			self.train_data=process(self.source)
 			self.train_data.extract_info()
-			self.maxstring = len(self.train_data.genotype[0])
+			self.maxstring = len(self.train_data.genotype[0])-1
 			self.total=self.train_data.intrusion+self.train_data.normal
+		print("---------------")
+		print("Initializing Random Population")
 		for i in range(0,self.popsize):
 			self.population.append(DNA(self.maxstring))
+		print("Operation Complete")
+		print("---------------")
+
+
 
 
 	def initialize_matingpool(self):
@@ -85,10 +92,12 @@ class population:
 
 
 	def calculate_fitness(self):
+		print("-------------------")
+		print("Calculating Fitness")
 		map(self.fitness,self.population)
 		avg=0
 		min=1
-		max=-1
+		max=0
 		for individual in self.population:
 			if(individual.fitness<min):
 				min=individual.fitness
@@ -98,37 +107,94 @@ class population:
 		self.min_fitness=min
 		self.max_fitness=max
 		self.average_fitness=avg/self.popsize
+		print("Operation Complete")
+		print("-------------------")
+
+
 
 
 	def fitness(self,individual):
+
 		a=0.00
 		b=0.00
+		fitness=0
 
 		for specimen in self.train_data.genotype:
-			prediction = self.predict(individual.genes, specimen)
-			label=specimen[-1]
-			if(prediction==1):
-				if(label==1):
-					a=a+1
-				else:
-					b=b+1
-		fitness=float(a)/self.train_data.intrusion- float(b)/self.train_data.normal
-		individual.fitness = fitness
-
+			penalty = self.predict(individual.genes, specimen)
+			label=specimen[-2]
+			prediction=individual.genes[-1]
+			if(prediction==label):
+				fitness=fitness+1
+			else:
+				fitness=fitness+(1-penalty)
+		individual.fitness = fitness/self.train_data.total
 
 
 	def predict(self,individual, specimen):
+
+		w1=0.239
+		w2=0.181
+		w3=0.215
+		w4=0.162
+		w5=0.069
+		w6=0.064
+		w7=0.055
+		w8=0.015
+		outcome=0
+
+		rank=specimen[-1]
+
+		f1=individual[0:7]
+		f2=individual[7:17]
+		f3=individual[17:29]
+		f4=individual[29:31]
+		f5=individual[31:35]
+		f6=individual[35:45]
+		f7=individual[45:52]
+		f8=individual[52:53]
+
+		af1=specimen[0:7]
+		af2=specimen[7:17]
+		af3=specimen[17:29]
+		af4=specimen[29:31]
+		af5=specimen[31:35]
+		af6=specimen[35:45]
+		af7=specimen[45:52]
+		af8=specimen[52:53]
+
+
+		if f1==af1:
+			outcome+=w1
+		if f2==af2:
+			outcome+=w2
+		if f3==af3:
+			outcome+=w3
+		if f4==af4:
+			outcome+=w4
+		if f5==af5:
+			outcome+=w5
+		if f6==af6:
+			outcome+=w6
+		if f7==af7:
+			outcome+=w7
+		if f8==af8:
+			outcome+=w8
+		evaluate=abs(outcome-self.suspicion)
+		penalty=(evaluate*rank)/100
+		return penalty
+
+
 		
-		similarity=0
-		limit=len(individual)-1
-		for i in range(0, limit-1):
-			if (str(individual[i]) == str(specimen[i])):
-				similarity=similarity+1
+		# similarity=0
+		# limit=len(individual)-1
+		# for i in range(0, limit-1):
+		# 	if (str(individual[i]) == str(specimen[i])):
+		# 		similarity=similarity+1
 		
-		if similarity==limit:
-			return individual[-1]
-		else:
-			return -1
+		# if similarity==limit:
+		# 	return individual[-1]
+		# else:
+		# 	return -1
 
 	def clean_generation(self):
 		self.intermediate_pop=list()
