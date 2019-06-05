@@ -52,16 +52,39 @@ class population:
 
 
 	def reproduce(self):
-		for i in range(0,self.popsize):
-			a=randint(0,len(self.matingpool)-1)
-			b=randint(0,len(self.matingpool)-1)
-			partnera=self.matingpool[a]
-			partnerb=self.matingpool[b]
+		print len(self.intermediate_pop)
+		while len(self.intermediate_pop)<self.popsize:
+			partnera=self.tournament()
+			partnerb=self.tournament()
 			child1,child2=partnera.crossover(partnerb)
 			child1.mutate(self.mutation_rate)
 			child2.mutate(self.mutation_rate)
+			self.intermediate_pop.append(partnera)
+			self.intermediate_pop.append(partnerb)
 			self.intermediate_pop.append(child1)
-		return self.intermediate_pop
+			self.intermediate_pop.append(child2)
+
+		return self.intermediate_pop[0:self.popsize]
+	def tournament(self):
+		index=len(self.matingpool)-1
+		players=[]
+		while len(players) < 3:
+			a=randint(0,index)
+			element=self.matingpool[a]
+			if element not in players:
+				players.append(element)
+		else:
+			if(players[0].fitness>players[1].fitness):
+				if(players[0].fitness>players[2].fitness):
+					return players[0]
+				else:
+					return players[2]
+
+			elif players[1]>players[2]:
+				return players[1]
+			else:
+				return players[2]
+
 
 
 	def calculate_fitness(self):
@@ -81,42 +104,35 @@ class population:
 
 
 	def fitness(self,individual):
-		AB=0
-		A=0
+		a=0.00
+		b=0.00
 
 		for specimen in self.train_data.genotype:
 			prediction = self.predict(individual.genes, specimen)
-			if (prediction == "AB"):
-				AB += 1
-			elif(prediction == "A"):
-				A += 1  
-		support=AB/self.total
-		if(A==0):
-			A=1
-		confidence = AB/A
-		fitness = self.w1*support+self.w2*confidence
+			label=specimen[-1]
+			if(prediction==1):
+				if(label==1):
+					a=a+1
+				else:
+					b=b+1
+		fitness=a/self.train_data.intrusion - b/self.train_data.normal
 		individual.fitness = fitness
+
 
 
 	def predict(self,individual, specimen):
 		
-		condition=1
-		result=1
+		similarity=0
 		limit=len(individual)-1
 		for i in range(0, limit-1):
-			if (str(individual[i]) != str(specimen[i])):
-				condition =0
-				break;
-		this=len(individual)
-		if(individual[limit]!=specimen[limit]):
-			result=0
-
-		if condition==1 and result == 1:
-			return "AB"
-		elif condition==1 and result==0:
-			return "A"
+			if (str(individual[i]) == str(specimen[i])):
+				similarity=similarity+1
+		
+		if similarity==limit:
+			return individual[-1]
 		else:
-			return
+			return -1
+
 	def clean_generation(self):
 		self.intermediate_pop=list()
 		self.min_fitness=0

@@ -4,7 +4,7 @@ import numpy as num
 from datetime import datetime
 
 
-new_population =population(10,30)
+new_population =population(200,30)
 new_population.initialize()
 new_population.calculate_fitness()
 best_population=new_population
@@ -13,13 +13,14 @@ def show_info(test):
 	print test.genes
 	print test.fitness
 	
-era=10
+era=1000
 for generation in range(0,era):
 	print("-----------------------------------")
 	print("Generation: "+str(generation))
 	current_population=new_population
 	current_population.initialize_matingpool()
 	new_population.population=current_population.reproduce()
+	print(len(new_population.population))
 	new_population.clean_generation()
 	new_population.calculate_fitness()
 	if best_population.average_fitness<new_population.average_fitness:
@@ -41,8 +42,6 @@ ruleset=[]
 for individual in best_population.population:
 	rule=(" ".join(map(str,individual.genes)))
 	ruleset.append(rule)
-
-
 
 file.write("\n".join(ruleset))
 file2.write("\n Average Fitness: "+str(best_population.average_fitness))
