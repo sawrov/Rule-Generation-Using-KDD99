@@ -21,7 +21,7 @@ class population:
 	average_fitness=0
 	popsize=0   
 	total=0
-	suspicion=0.9                                                                               
+	suspicion=0.8                                                                           
 
 	def __init__(self, popsize=5,maxstring=5,mutation_rate=0.01,source="KDDTrain+_20Percent.txt"):
 		self.popsize = popsize
@@ -120,11 +120,12 @@ class population:
 		fitness=0
 
 		for specimen in self.train_data.genotype:
-			penalty = self.predict(individual.genes, specimen)
+			outcome,penalty = self.predict(individual.genes, specimen)
 			label=specimen[-2]
 			prediction=individual.genes[-1]
 			if(prediction==label):
-				fitness=fitness+1
+				if(outcome>self.suspicion):
+					fitness=fitness+1
 			else:
 				fitness=fitness+(1-penalty)
 		individual.fitness = fitness/self.train_data.total
@@ -181,7 +182,7 @@ class population:
 			outcome+=w8
 		evaluate=abs(outcome-self.suspicion)
 		penalty=(evaluate*rank)/100
-		return penalty
+		return outcome,penalty
 
 
 		
