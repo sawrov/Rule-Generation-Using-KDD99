@@ -1,0 +1,5 @@
+
+ Average Fitness: 0.772072267902
+ Total Number of Generation Run: 500
+ Max Fitness: 0.775167821531
+ Min Fitness: 0.653237815973
