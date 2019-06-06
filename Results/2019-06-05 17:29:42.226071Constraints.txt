@@ -1,0 +1,3 @@
+
+ Average Fitness: 0.751343403789
+ Total Number of Generation Run: 10
